@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grafico Orario di Lavoro / Modifiche — Sito_TPS</title>
+  <style>
+    :root {
+      --bg: #fff5f7;
+      --card: #ffffff;
+      --text: #2d3748;
+      --muted: #718096;
+      --pink: #db2777;
+      --pink-dark: #831843;
+      --pink-light: #fce7f3;
+      --border: #fbcfe8;
+      --violet: #7c3aed;
+      --green: #059669;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; color: var(--pink-dark); margin: 0 0 .25rem; }
+    .sub { color: var(--muted); margin: 0 0 1.5rem; font-size: .95rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(219, 39, 119, .08);
+    }
+    .card h2 { font-size: 1.1rem; color: var(--pink-dark); margin: 0 0 1rem; }
+    .legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: .82rem; color: var(--muted); margin-top: .75rem; }
+    .legend span { display: inline-flex; align-items: center; gap: .4rem; }
+    .dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+    /* Bar chart */
+    .bars { display: grid; grid-template-columns: 190px 1fr; gap: .35rem .75rem; align-items: center; }
+    .bar-label { font-size: .8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+    .bar-label strong { color: var(--text); }
+    .bar-track { background: #fdf2f8; border-radius: 6px; height: 26px; position: relative; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: .5rem; font-size: .72rem; font-weight: 700; color: #fff; min-width: 2px; }
+    .bar-fill.boiler { background: #cbd5e1; color: #334155; }
+    .bar-fill.code { background: var(--pink); }
+    .bar-fill.zero { background: transparent; }
+    .bar-pct { position: absolute; left: .5rem; top: 50%; transform: translateY(-50%); font-size: .72rem; color: var(--muted); }
+
+    svg { width: 100%; height: auto; display: block; }
+    .grid { stroke: #f1d4e2; stroke-width: 1; }
+    .axis-label { font-size: 10px; fill: var(--muted); }
+    .line { fill: none; stroke: var(--violet); stroke-width: 2.5; }
+    .area { fill: rgba(124, 58, 237, .08); }
+    .pt { fill: #fff; stroke: var(--violet); stroke-width: 2; }
+    .pt-label { font-size: 10px; fill: var(--pink-dark); font-weight: 700; }
+    .note { font-size: .8rem; color: var(--muted); margin-top: .75rem; }
+    .kpi { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .kpi div { background: #fdf2f8; border: 1px solid var(--border); border-radius: 8px; padding: .6rem .9rem; font-size: .8rem; color: var(--muted); }
+    .kpi strong { display: block; font-size: 1.15rem; color: var(--pink-dark); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Orario di lavoro vs percentuale di modifiche</h1>
+  <p class="sub">Sito_TPS — 7 commit, 02/11/2026 · churn totale 824 righe (di cui 450 boilerplate iniziale)</p>
+
+  <div class="kpi">
+    <div><strong>2h 58m</strong>durata sessione</div>
+    <div><strong>55m 39s</strong>primo blocco attivo</div>
+    <div><strong>2h 03m</strong>pausa centrale</div>
+    <div><strong>267</strong>righe nel commit finale (32,4%)</div>
+  </div>
+
+  <!-- CHART A -->
+  <section class="card">
+    <h2>1 · Distribuzione delle modifiche per commit</h2>
+    <div class="bars">
+      <div class="bar-label"><strong>10:32</strong> a8f946c · Initial</div>
+      <div class="bar-track"><div class="bar-fill boiler" style="width:100%">450 · 54,6%</div></div>
+
+      <div class="bar-label"><strong>11:09</strong> 3e6660c · prima</div>
+      <div class="bar-track"><div class="bar-fill code" style="width:6.2%"></div><span class="bar-pct">28 · 3,4%</span></div>
+
+      <div class="bar-label"><strong>11:16</strong> 4c3f275 · prima</div>
+      <div class="bar-track"><div class="bar-fill code" style="width:6.2%"></div><span class="bar-pct">28 · 3,4%</span></div>
+
+      <div class="bar-label"><strong>11:19</strong> 0291caf · merge</div>
+      <div class="bar-track"><div class="bar-fill zero" style="width:0"></div><span class="bar-pct">0 · 0,0%</span></div>
+
+      <div class="bar-label"><strong>11:22</strong> 9c932da · file base</div>
+      <div class="bar-track"><div class="bar-fill zero" style="width:0"></div><span class="bar-pct">0 · 0,0%</span></div>
+
+      <div class="bar-label"><strong>11:28</strong> ec487b6 · codice</div>
+      <div class="bar-track"><div class="bar-fill code" style="width:11.3%"></div><span class="bar-pct">51 · 6,2%</span></div>
+
+      <div class="bar-label"><strong>13:31</strong> 7e14e2f · design</div>
+      <div class="bar-track"><div class="bar-fill code" style="width:59.3%">267 · 32,4%</div></div>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:#cbd5e1"></i> Boilerplate iniziale</span>
+      <span><i class="dot" style="background:var(--pink)"></i> Codice del progetto</span>
+    </div>
+    <p class="note">Escludendo il boilerplate, il commit delle 13:31 pesa il <strong>71,4%</strong> del codice scritto.</p>
+  </section>
+
+  <!-- CHART B -->
+  <section class="card">
+    <h2>2 · Avanzamento cumulativo delle modifiche nell'orario di lavoro</h2>
+    <svg viewBox="0 0 720 320" role="img" aria-label="Grafico dell'avanzamento cumulativo delle modifiche dalle 10:32 alle 13:31">
+      <!-- griglia orizzontale -->
+      <line class="grid" x1="60" y1="20"  x2="700" y2="20"/>
+      <line class="grid" x1="60" y1="80"  x2="700" y2="80"/>
+      <line class="grid" x1="60" y1="140" x2="700" y2="140"/>
+      <line class="grid" x1="60" y1="200" x2="700" y2="200"/>
+      <line class="grid" x1="60" y1="260" x2="700" y2="260"/>
+
+      <!-- etichette asse Y -->
+      <text class="axis-label" x="52" y="24"  text-anchor="end">100%</text>
+      <text class="axis-label" x="52" y="84"  text-anchor="end">75%</text>
+      <text class="axis-label" x="52" y="144" text-anchor="end">50%</text>
+      <text class="axis-label" x="52" y="204" text-anchor="end">25%</text>
+      <text class="axis-label" x="52" y="264" text-anchor="end">0%</text>
+
+      <!-- griglia verticale + etichette ora -->
+      <line class="grid" x1="60"  y1="20" x2="60"  y2="260"/>
+      <line class="grid" x1="140" y1="20" x2="140" y2="260"/>
+      <line class="grid" x1="220" y1="20" x2="220" y2="260"/>
+      <line class="grid" x1="300" y1="20" x2="300" y2="260"/>
+      <line class="grid" x1="380" y1="20" x2="380" y2="260"/>
+      <line class="grid" x1="460" y1="20" x2="460" y2="260"/>
+      <line class="grid" x1="540" y1="20" x2="540" y2="260"/>
+      <line class="grid" x1="620" y1="20" x2="620" y2="260"/>
+      <line class="grid" x1="700" y1="20" x2="700" y2="260"/>
+      <text class="axis-label" x="60"  y="278" text-anchor="middle">10:00</text>
+      <text class="axis-label" x="140" y="278" text-anchor="middle">10:30</text>
+      <text class="axis-label" x="220" y="278" text-anchor="middle">11:00</text>
+      <text class="axis-label" x="300" y="278" text-anchor="middle">11:30</text>
+      <text class="axis-label" x="380" y="278" text-anchor="middle">12:00</text>
+      <text class="axis-label" x="460" y="278" text-anchor="middle">12:30</text>
+      <text class="axis-label" x="540" y="278" text-anchor="middle">13:00</text>
+      <text class="axis-label" x="620" y="278" text-anchor="middle">13:30</text>
+      <text class="axis-label" x="700" y="278" text-anchor="middle">14:00</text>
+
+      <!-- area sotto la linea -->
+      <polygon class="area" points="147.7,260 147.7,128.9 246.2,120.8 264.4,112.6 272.7,112.6 280.9,112.6 296.1,97.8 623.9,20 623.9,260"/>
+
+      <!-- linea cumulata -->
+      <polyline class="line" points="147.7,128.9 246.2,120.8 264.4,112.6 272.7,112.6 280.9,112.6 296.1,97.8 623.9,20"/>
+
+      <!-- punti -->
+      <circle class="pt" cx="147.7" cy="128.9" r="4"/>
+      <circle class="pt" cx="246.2" cy="120.8" r="4"/>
+      <circle class="pt" cx="264.4" cy="112.6" r="4"/>
+      <circle class="pt" cx="272.7" cy="112.6" r="3"/>
+      <circle class="pt" cx="280.9" cy="112.6" r="3"/>
+      <circle class="pt" cx="296.1" cy="97.8"  r="4"/>
+      <circle class="pt" cx="623.9" cy="20"    r="5"/>
+
+      <!-- etichette punti -->
+      <text class="pt-label" x="147.7" y="120" text-anchor="middle">10:32 · 54,6%</text>
+      <text class="pt-label" x="246.2" y="112" text-anchor="middle">11:09 · 58,0%</text>
+      <text class="pt-label" x="276"   y="140" text-anchor="middle">11:16–11:22 · 61,4%</text>
+      <text class="pt-label" x="296.1" y="88"  text-anchor="middle">11:28 · 67,6%</text>
+      <text class="pt-label" x="623.9" y="14"  text-anchor="middle">13:31 · 100%</text>
+    </svg>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--violet)"></i> % cumulata del churn</span>
+      <span><i class="dot" style="background:#cbd5e1"></i> Il tratto piatto 11:16–11:22 indica commit vuoti/merge</span>
+    </div>
+    <p class="note">
+      Tra le 11:28 e le 13:31 non ci sono commit: la pausa di ~2h precede il commit più corposo
+      (267 righe, +32,4% del totale). Il 54,6% iniziale è boilerplate, non lavoro di coding.
+    </p>
+  </section>
+</div>
+</body>
+</html>
